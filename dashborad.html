@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<style>
+    *{
+        text-align: center;
+    }
+    nav{
+            display: flex;
+            justify-content: space-evenly;
+            background-color: black;
+            padding: 10px;
+        }
+        nav a{
+            text-decoration: none;
+            color: white;
+            font-size: 20px;
+        }
+    table{
+        border: 1px solid black;
+        border-spacing: 5px;
+        width: 70%;
+        margin: auto;
+    }
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+        padding: 20px 0;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    th, td {
+        text-align: left;
+        padding: 12px 15px;
+    }
+
+    th {
+        background-color: #007BFF;
+        color: #fff;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #ddd;
+    }
+
+    td {
+        border-bottom: 1px solid #ddd;
+    }
+
+    td:last-child {
+        text-align: center;
+    }
+
+    .reject {
+        background-color: #dc3545;
+     color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    .confirm {
+        background-color: #28a745;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+</style>
+<body>
+    <nav>
+        <a href="index.html">Registration</a>
+        <a href="dashborad.html">Dashborad</a>
+        <a href="booking.html">Booking</a>
+    </nav>
+    <h1>Dashboard</h1>
+    <table>
+        <thead>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Departure</th>
+            <th>Destination</th>
+            <th>Date</th>
+            <th>Seat</th>
+            <th>OTP</th>
+            <th>Reject</th>
+            <th>Confirm</th>
+        </thead>
+        <tbody>
+            <!-- data will be appended here from local storage -->
+        </tbody>
+    </table>
+</body>
+</html>
+<script>
+    let data = JSON.parse(localStorage.getItem('register-data')) || [];
+    let booked = JSON.parse(localStorage.getItem('booked-data')) || [];
+    let tbody = document.querySelector("tbody");
+    function getRandomFourDigitNumber (){
+        const min = 1000;
+        const max = 9999;
+        return Math.floor(Math.random()*(max-min+1))+min;
+    }
+    function coolfun(data){
+        tbody.textContent='';
+        data.map((ele,idx)=>{
+            let tr = document.createElement('tr');
+            let td1 = document.createElement('td');
+            td1.textContent=idx+1;
+
+            let td2 = document.createElement('td');
+            td2.textContent=ele.passanger;
+
+            let td3 = document.createElement('td');
+            td3.textContent=ele.age;
+
+            let td4 = document.createElement('td');
+            td4.textContent=ele.Departure;
+
+            let td5 = document.createElement('td');
+            td5.textContent=ele.Destination;
+
+            let td6 = document.createElement('td');
+            td6.textContent=ele.date;
+
+            let td7 = document.createElement('td');
+            td7.textContent=ele.Seat;
+            var otp = getRandomFourDigitNumber();
+            let td8 = document.createElement('td');
+            td8.textContent=otp;
+
+            let td9 = document.createElement('td');
+            td9.textContent='Reject';
+            td9.style.backgroundColor='red';
+            td9.addEventListener('click',()=>{
+                badfun(ele);
+            })
+            let td10 = document.createElement('td');
+            td10.textContent='Confirm';
+            td10.style.backgroundColor='green';
+            td10.addEventListener('click',()=>{
+                goodfun(ele,otp)
+            })
+
+            tr.append(td1,td2,td3,td4,td5,td6,td7,td8,td9,td10);
+            tbody.append(tr)
+        })
+    }
+
+    coolfun(data);
+    
+    function badfun(ele){
+        data.splice(ele,1);
+        localStorage.setItem('register-data',JSON.stringify(data));
+        coolfun(data);
+    }
+    function goodfun({passanger,age,Departure,Destination,Seat,date},otp){
+        alert(otp);
+        const otpval = prompt('Enter OTP');
+        if(otpval==otp){
+            let p1 = new Promise((resolve,reject)=>{
+                alert(`${passanger} added to waiting list`);
+                setTimeout(()=>{
+                    alert(`Booking ticket from ${Departure} to ${Destination}`);
+                    resolve();
+                },5000)
+            })
+            p1.then((res)=>{
+                setTimeout(()=>{
+                    alert(`Ticket booked for ${date}`);
+                },10000)
+                let Confirm = {
+                    passanger,age,Departure,Destination,Seat,date
+                }
+                booked.push(Confirm);
+                localStorage.setItem('booked-data',JSON.stringify(booked));
+                badfun(Confirm);
+                window.location.href='booking.html';
+            })
+            .catch((err)=>{
+                console.log(err);
+            })
+        }
+        else{
+            alert('Incorrect OTP')
+        }
+    }
+
+</script>

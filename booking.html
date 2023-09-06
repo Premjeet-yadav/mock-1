@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings</title>
+</head>
+<style>
+    * {
+        text-align: center;
+    }
+    nav{
+            display: flex;
+            justify-content: space-evenly;
+            background-color: black;
+            padding: 10px;
+        }
+        nav a{
+            text-decoration: none;
+            color: white;
+            font-size: 20px;
+        }
+    table {
+        border: 1px solid black;
+        border-spacing: 5px;
+        width: 70%;
+        margin: auto;
+    }
+
+    /* Style for the whole page */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #ffffff;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Style for the header */
+    h1 {
+        text-align: center;
+        padding: 20px 0;
+        margin: 0;
+    }
+
+    /* Style for the select elements */
+    select {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #fff;
+        font-size: 16px;
+    }
+
+    /* Style for the table */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Style for the table headings */
+    th {
+        background-color: #007BFF;
+        color: #fff;
+        font-weight: bold;
+        padding: 10px;
+        text-align: left;
+    }
+
+    /* Style for the table data cells */
+    td {
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    /* Style for even rows */
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    /* Style for odd rows */
+    tr:nth-child(odd) {
+        background-color: #fff;
+    }
+
+    #button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    select {
+        width: auto;
+    }
+</style>
+
+<body>
+    <nav>
+        <a href="index.html">Registration</a>
+        <a href="dashborad.html">Dashborad</a>
+        <a href="booking.html">Booking</a>
+    </nav>
+    <h1>My Bookings</h1>
+    <div id="button">
+        <select id="seating">
+            <option value="">Select Seat</option>
+            <option value="AC Tier-1">AC Tier-1</option>
+            <option value="AC Tier-2">AC Tier-2</option>
+            <option value="AC Tier-3">AC Tier-3</option>
+            <option value="Sleeper">Sleeper</option>
+            <option value="General">General</option>
+        </select>
+        <select id="ageSort">
+            <option value="">sort by age</option>
+            <option value="asc">asc</option>
+            <option value="desc">desc</option>
+        </select>
+        <select id="dateSort">
+            <option value="">sort by date</option>
+            <option value="asc">asc</option>
+            <option value="desc">desc</option>
+        </select>
+    </div>
+    <table>
+        <thead>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Departure</th>
+            <th>Destination</th>
+            <th>Date</th>
+            <th>Seat</th>
+        </thead>
+        <tbody>
+            <!-- data will be appended here from local storage -->
+        </tbody>
+    </table>
+</body>
+
+</html>
+<script>
+    let data = JSON.parse(localStorage.getItem('booked-data')) || [];
+    let tbody = document.querySelector("tbody");
+
+    function coolfun(data) {
+        tbody.textContent = '';
+        data.map((ele, idx) => {
+            let tr = document.createElement('tr');
+            let td1 = document.createElement('td');
+            td1.textContent = idx + 1;
+
+            let td2 = document.createElement('td');
+            td2.textContent = ele.passanger;
+
+            let td3 = document.createElement('td');
+            td3.textContent = ele.age;
+
+            let td4 = document.createElement('td');
+            td4.textContent = ele.Departure;
+
+            let td5 = document.createElement('td');
+            td5.textContent = ele.Destination;
+
+            let td6 = document.createElement('td');
+            td6.textContent = ele.date;
+
+            let td7 = document.createElement('td');
+            td7.textContent = ele.Seat;
+
+
+            tr.append(td1, td2, td3, td4, td5, td6, td7);
+            tbody.append(tr)
+        })
+    }
+
+    coolfun(data);
+
+    let sortAge = document.getElementById("ageSort");
+    sortAge.addEventListener("click", () => {
+        let val = sortAge.value;
+        if (val === "") {
+            coolfun(data);
+        }
+        if (val === "asc") {
+            let sorted = data.sort(function (a, b) {
+                return a.age - b.age;
+            });
+            coolfun(sorted);
+        } else if (val === "desc") {
+            let sorted = data.sort(function (a, b) {
+                return b.age - a.age;
+            });
+            coolfun(sorted);
+        }
+    });
+
+    let sortDate = document.getElementById("dateSort");
+    sortDate.addEventListener("click", () => {
+        let val = sortDate.value;
+        console.log(val);
+        if (val === "") {
+            coolfun(data);
+        }
+        if (val === "asc") {
+            let sorted = data.sort(function (a, b) {
+                if (a.date > b.date) return 1;
+                if (a.date < b.date) return -1;
+                return 0;
+            });
+            coolfun(sorted);
+        } else if (val === "desc") {
+            let sorted = data.sort(function (a, b) {
+                if (a.date > b.date) return -1;
+                if (a.date < b.date) return 1;
+                return 0;
+            });
+            coolfun(sorted);
+        }
+    });
+
+
+
+
+    let seatFilter = document.querySelector("#seating");
+    seatFilter.addEventListener("click", () => {
+        let val = seatFilter.value;
+        if (val !== "") {
+            let fil = data.filter((elem, idx) => {
+                return elem.seat === val;
+            });
+            coolfun(fil);
+        }
+        else {
+            coolfun(data);
+        }
+
+    });
+
+</script>

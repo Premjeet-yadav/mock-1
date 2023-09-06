@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Train Bookings</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    nav {
+        display: flex;
+        justify-content: space-evenly;
+        background-color: black;
+        padding: 10px;
+    }
+
+    nav a {
+        text-decoration: none;
+        color: white;
+        font-size: 20px;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    form {
+
+        padding: 15px;
+        width: 25%;
+        border: 1px solid black;
+        margin: auto;
+        margin-top: 50px;
+        text-align: center;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    form {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    input[type="date"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    select {
+        height: 40px;
+    }
+
+    input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        background-color: #007BFF;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<body>
+    <nav>
+        <a href="index.html">Registration</a>
+        <a href="dashborad.html">Dashborad</a>
+        <a href="booking.html">Booking</a>
+    </nav>
+    <h1>Train Ticket Booking</h1>
+    <form>
+        <input type="text" placeholder="passanger name" id="name" required>
+        <input type="number" placeholder="age" id="age" required>
+        <select id="Departure" required>
+            <option value="">Select Departure</option>
+            <option value="Pune">Pune</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Banglore">Banglore</option>
+            <option value="Hydrabad">Hydrabad</option>
+            <option value="Delhi">Delhi</option>
+        </select>
+        <select id="Destination" required>
+            <option value="">Select Destination</option>
+            <option value="Pune">Pune</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Banglore">Banglore</option>
+            <option value="Hydrabad">Hydrabad</option>
+            <option value="Delhi">Delhi</option>
+        </select>
+        <input type="date" id="date" required>
+        <select id="Seat" required>
+            <option value="">Select Seat</option>
+            <option value="AC Tier-1">AC Tier-1</option>
+            <option value="AC Tier-2">AC Tier-2</option>
+            <option value="AC Tier-3">AC Tier-3</option>
+            <option value="Sleeper">Sleeper</option>
+            <option value="General">General</option>
+        </select>
+        <input type="submit" id="submit" value="Submit">
+    </form>
+</body>
+
+</html>
+<script>
+    document.querySelector('form').addEventListener('submit', coolfun);
+    let arr = JSON.parse(localStorage.getItem('register-data')) || [];
+    function coolfun(event) {
+        event.preventDefault();
+        let passanger = document.getElementById('name').value;
+        let age = document.getElementById('age').value;
+        let Departure = document.getElementById('Departure').value;
+        let Destination = document.getElementById('Destination').value;
+        let date = document.getElementById('date').value;
+        let Seat = document.getElementById('Seat').value;
+        if (passanger.length < 4) {
+            alert('name should be more than 4 characters....');
+        }
+        else if (age < 18 || age > 40) {
+            alert('age should be between 18 to 40')
+        }
+        else if (Departure === Destination) {
+            alert("Departure and Destination can't be same")
+        } else {
+            let details = {
+                passanger,
+                age,
+                Departure,
+                Destination,
+                date,
+                Seat
+            }
+            arr.push(details);
+            localStorage.setItem('register-data', JSON.stringify(arr));
+        }
+
+    }
+</script>
